@@ -5,17 +5,18 @@ import shape
 pygame.init()
 
 
-window = pygame.display.set_mode((1100, 900))
-pause = 0.8
+window = pygame.display.set_mode((1100, 800))
+pause = 0.2
 
-new_shape = shape.Shape()
+game_board = board.Board()
+new_shape = shape.Shape(4)
 last_time = time.time()
 
 
 while True:
-	window.fill((0, 0, 0))
-	board.draw_grid(window)
-	new_shape.draw(window)
+	window.fill((20, 30, 40))
+	game_board.draw_grid(window)
+	new_shape.draw(game_board, window)
 	pygame.display.flip()
 
 	if (time.time() - last_time) > pause:
@@ -25,5 +26,11 @@ while True:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			quit()
-		elif event.type == pygame.MOUSEBUTTONDOWN:
+		elif event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
 			new_shape.rotate(1)
+		elif event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
+			new_shape.rotate(-1)
+		elif event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
+			new_shape.scoot(1)
+		elif event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
+			new_shape.scoot(-1)

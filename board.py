@@ -1,21 +1,24 @@
 import pygame
 
-grid_color = (100, 100, 100)
-grid_size = 30
-grid_width = 10
-grid_height = 20
-grid_pos = (100, 100)
+height = 20
+width = 10
 
+class Board:
 
-def draw_grid(surf):
-	for i in range(grid_pos[0], grid_pos[0] + 1 + (grid_width * grid_size), grid_size):
-		pygame.draw.line(surf, grid_color, (i, grid_pos[1]), (i, grid_pos[1] + (grid_height * grid_size)))
+	def __init__(self) -> None:
+		self.color = (160, 160, 160)
+		self.size = 30
+		self.pos = (100, 100)
 
-	for i in range(grid_pos[1], (grid_height * grid_size) + grid_pos[1] + 1, grid_size):
-		pygame.draw.line(surf, grid_color, (grid_pos[0], i), (grid_pos[0] + (grid_width * grid_size), i))
+	def draw_grid(self, surf):
+		for i in range(self.pos[0], self.pos[0] + 1 + (width * self.size), self.size):
+			pygame.draw.line(surf, self.color, (i, self.pos[1]), (i, self.pos[1] + (height * self.size)))
 
-def draw_square(surf, color, pos):
-	x = grid_pos[0] + (grid_size * pos[0]) + 1
-	y = grid_pos[1] + (grid_size * pos[1]) + 1
-	
-	pygame.draw.rect(surf, color, (x, y, grid_size - 1, grid_size - 1))
+		for i in range(self.pos[1], (height * self.size) + self.pos[1] + 1, self.size):
+			pygame.draw.line(surf, self.color, (self.pos[0], i), (self.pos[0] + (width * self.size), i))
+
+	def draw_square(self, surf, color, pos):
+		x = self.pos[0] + (self.size * pos[0]) + 1
+		y = self.pos[1] + (self.size * pos[1]) + 1
+		
+		pygame.draw.rect(surf, color, (x, y, self.size - 1, self.size - 1))

@@ -67,14 +67,16 @@ class Board:
 		if not self.valid_pos():
 			self.piece_pos[0] -= dx
 
-	def move_y(self, dy) -> None:
+	def move_y(self, dy) -> bool:
 		self.piece_pos[1] += dy
-		if not self.valid_pos():
-			self.piece_pos[1] -= dy
-			for coord in self.piece.squares():
-				self.full_cells[(coord[0] + self.piece_pos[0], coord[1] + self.piece_pos[1])] = self.piece.color
-				self.clear_lines()
-			self.spawn_piece()
+		if self.valid_pos():
+			return False
+		self.piece_pos[1] -= dy
+		for coord in self.piece.squares():
+			self.full_cells[(coord[0] + self.piece_pos[0], coord[1] + self.piece_pos[1])] = self.piece.color
+			self.clear_lines()
+		self.spawn_piece()
+		return True
 
 	def rotate(self, direction) -> None:
 		self.piece.rotate(direction)

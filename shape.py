@@ -1,4 +1,5 @@
 
+# Contains coordinates for each shape for each rotation/orientation they can be in
 shapes = [
 	[[(2, 2), (3, 2), (2, 3), (3, 3)]], # O
 
@@ -27,6 +28,7 @@ shapes = [
 	 [(2, 1), (1, 2), (2, 2), (2, 3)]] # T
 ]
 
+# Corresponding colors
 shape_colors = [
 	(230, 190, 0), # O
 	(10, 180, 60), # S
@@ -40,15 +42,17 @@ shape_colors = [
 
 class Shape:
 
-	def __init__(self, shape_num) -> None:
-		self.shape_num = shape_num
-		self.orientation = 0
+	def __init__(self, shape_num: int) -> None:
+		self.shape_num = shape_num # Number representing the index in the shapes list that is this shape
+		self.orientation = 0 # The index of the rotation
 		self.shape = shapes[self.shape_num]
 		self.color = shape_colors[self.shape_num]
 
-	def rotate(self, direction):
+	# Iterates through the different rotations of each shape by incrementing the orientation variable
+	def rotate(self, direction: int):
 		self.orientation = (self.orientation + direction) % len(self.shape)
 
+	# Gets all the coordinates for the cells in the shape in its current rotation/orientation
 	def squares(self):
 		return self.shape[self.orientation]
 

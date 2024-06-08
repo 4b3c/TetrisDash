@@ -6,7 +6,7 @@ pygame.init()
 
 
 window = pygame.display.set_mode((1100, 800))
-pause = 0.4
+pause = 0.6
 
 game_board = Board()
 input_handler = UserInput()

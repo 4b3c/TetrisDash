@@ -1,23 +1,25 @@
 import pygame
 import random
 from shape import Shape
+from particles import ParticleSystem
 
 # Constants for the game board
 height = 20
 width = 10
+size = 30
 shapes = [0, 1, 2, 3, 4, 5, 6]
 
 class Board:
 
-	def __init__(self) -> None:
+	def __init__(self, particlesystem: ParticleSystem) -> None:
 		self.color = (160, 160, 160)
-		self.size = 30 # Pixel width of each grid cell
 		self.pos = (100, 100) # Position of the board on the screen 
 		self.shapes = [] # Bag of shape options (so 1 pieces doesn't appear more than 2 times in a row)
 		self.full_cells = {} # Dictionary to track filled cells and their colors
 		self.game_over = False
 		self.score = 0
 		self.spawn_piece() # Spawns the first piece
+		self.particlesystem = particlesystem
 
 	# Creates a new piece at the top of the grid
 	def spawn_piece(self) -> None:
@@ -32,16 +34,16 @@ class Board:
 
 	# Fills in a square in the grid by coordinate
 	def draw_square(self, surf: pygame.Surface, color: tuple, pos: tuple) -> None:
-		x = self.pos[0] + (self.size * pos[0]) + 1
-		y = self.pos[1] + (self.size * pos[1]) + 1
-		pygame.draw.rect(surf, color, (x, y, self.size - 1, self.size - 1))
+		x = self.pos[0] + (size * pos[0]) + 1
+		y = self.pos[1] + (size * pos[1]) + 1
+		pygame.draw.rect(surf, color, (x, y, size - 1, size - 1))
 
 	# Draws lines representing the grid of the board
 	def draw_grid(self, surf: pygame.Surface) -> None:
-		for i in range(self.pos[0], self.pos[0] + 1 + (width * self.size), self.size):
-			pygame.draw.line(surf, self.color, (i, self.pos[1]), (i, self.pos[1] + (height * self.size)))
-		for i in range(self.pos[1], (height * self.size) + self.pos[1] + 1, self.size):
-			pygame.draw.line(surf, self.color, (self.pos[0], i), (self.pos[0] + (width * self.size), i))
+		for i in range(self.pos[0], self.pos[0] + 1 + (width * size), size):
+			pygame.draw.line(surf, self.color, (i, self.pos[1]), (i, self.pos[1] + (height * size)))
+		for i in range(self.pos[1], (height * size) + self.pos[1] + 1, size):
+			pygame.draw.line(surf, self.color, (self.pos[0], i), (self.pos[0] + (width * size), i))
 		for coord in self.full_cells:
 			self.draw_square(surf, self.full_cells[coord], coord)
 
@@ -96,9 +98,16 @@ class Board:
 		for col in range(width):
 			if (col, row) not in self.full_cells:
 				return False # Exit if any pieces in the row are not filled
-				
+		
+		self.piece = None
 		for col in range(width):
-			self.full_cells.pop((col, row)) # Remove each cell from the row
+			x = (col * size) + self.pos[0] + 15
+			y = (row * size) + self.pos[1] + 15
+			self.particlesystem.add_particles(x, y, 20, self.full_cells.pop((col, row)))
+			self.particlesystem.draw_particles()
+			pygame.display.update()
+
+		self.particlesystem.play_until_done(self)
 
 		for k in range(row, 0, -1):
 			for col in range(width):

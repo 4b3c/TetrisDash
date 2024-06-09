@@ -2,20 +2,24 @@ import pygame
 import time
 from board import Board
 from user_input import UserInput
+from particles import ParticleSystem
 pygame.init()
 
 
 window = pygame.display.set_mode((1100, 800))
 pause = 0.6
 
-game_board = Board()
 input_handler = UserInput()
+particlesystem = ParticleSystem(window)
+game_board = Board(particlesystem)
+
 last_time = time.time()
 
 
 while True:
 	window.fill((20, 30, 40))
 	game_board.update(window)
+	particlesystem.draw_particles()
 	pygame.display.flip()
 
 	if (time.time() - last_time) > pause:
